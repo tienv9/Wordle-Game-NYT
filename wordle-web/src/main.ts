@@ -18,9 +18,8 @@ import { Services } from './scripts/services'
 import { SignInService } from './scripts/signInService'
 
 
-//Check if the app is running on localhost
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-  Axios.defaults.baseURL = 'http://localhost:5006/'
+  Axios.defaults.baseURL = '/api'
 } else {
   Axios.defaults.baseURL = 'https://api.wordleclone.lol'
 }

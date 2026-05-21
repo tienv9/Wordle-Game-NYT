@@ -23,14 +23,47 @@
     <br/>
     <br/>
     <h3>Want to add a word to our word bank?</h3>
-    <v-btn @click="$router.push('/wordeditor')" color="primary">Word Editor</v-btn>
-
-
-
+    <v-btn @click="goToWordEditor" color="primary">Word Editor</v-btn>
   </v-container>
+
+  <v-dialog v-model="showLoginRequired" max-width="360">
+    <v-card>
+      <v-card-title>Sign In Required</v-card-title>
+      <v-card-text>You must be signed in to use the Word Editor.</v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="primary" variant="elevated" @click="openSignIn">Sign In</v-btn>
+        <v-btn @click="showLoginRequired = false">Cancel</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <SignInDialog v-model="showSignInDialog" />
 </template>
 
 <script setup lang="ts">
+import { ref, inject } from 'vue'
+import { useRouter } from 'vue-router'
+import { Services } from '@/scripts/services'
+import type { SignInService } from '@/scripts/signInService'
+import SignInDialog from '@/components/SignInDialog.vue'
+
+const router = useRouter()
+const signInService = inject(Services.SignInService) as SignInService
+
+const showLoginRequired = ref(false)
+const showSignInDialog = ref(false)
+
+function goToWordEditor() {
+  if (signInService.isSignedIn) {
+    router.push('/wordeditor')
+  } else {
+    showLoginRequired.value = true
+  }
+}
+
+function openSignIn() {
+  showLoginRequired.value = false
+  showSignInDialog.value = true
+}
 </script>
-
-

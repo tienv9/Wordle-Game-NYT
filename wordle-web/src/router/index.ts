@@ -4,7 +4,6 @@ import WordleView from '../views/WordleView.vue'
 import LeaderboardView from '../views/LeaderboardView.vue'
 import LastTenWords from '@/views/LastTenWords.vue'
 import { Services } from '@/scripts/services'
-import { inject } from 'vue'
 import { SignInService } from '@/scripts/signInService'
 import WordEditor from '@/views/WordEditor.vue'
 
@@ -41,20 +40,16 @@ const router = createRouter({
       path: '/wordeditor',
       name: 'wordEditor',
       component: WordEditor,
+      beforeEnter: (to, from, next) => {
+        if (SignInService.instance.isSignedIn) next()
+        else next({ name: 'home' })
+      }
     }
     ,
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
-      beforeEnter: (to, from, next) => {
-        //return SignInService.instance._isSignedIn
-        if (SignInService.instance.isSignedIn) next()
-        else next({ name: 'wordle' })
-      }
     },
     {
       path: '/leaderboard',

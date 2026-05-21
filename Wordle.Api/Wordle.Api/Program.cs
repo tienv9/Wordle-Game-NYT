@@ -20,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
     options.AddPolicy(name: MyAllowAllOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("*");
+                          policy.AllowAnyOrigin();
                           policy.AllowAnyMethod();
                           policy.AllowAnyHeader();
                       });

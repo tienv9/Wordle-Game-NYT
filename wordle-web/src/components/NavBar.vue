@@ -52,8 +52,8 @@
           <v-list-item prepend-icon="mdi-account-check" v-if="signInService.isSignedIn" @click="signInService.signOut()">
             Sign Out
           </v-list-item>
-          <v-list-item prepend-icon="mdi-information" to="/about" v-if="signInService.isSignedIn">
-            About 
+          <v-list-item prepend-icon="mdi-information" to="/about">
+            About
           </v-list-item>
         </v-list-item-content>
       </v-list-item>
