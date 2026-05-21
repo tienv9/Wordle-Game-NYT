@@ -22,7 +22,7 @@ import { SignInService } from './scripts/signInService'
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
   Axios.defaults.baseURL = 'http://localhost:5006/'
 } else {
-  Axios.defaults.baseURL = 'https://wordle2023-nparkman.azurewebsites.net'
+  Axios.defaults.baseURL = 'https://api.wordleclone.lol'
 }
 
 const vuetify = createVuetify({

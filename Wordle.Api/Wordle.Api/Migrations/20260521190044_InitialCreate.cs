@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Wordle.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedUsers : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +53,39 @@ namespace Wordle.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Players",
+                columns: table => new
+                {
+                    PlayerId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GameCount = table.Column<int>(type: "int", nullable: false),
+                    TotalAttempts = table.Column<int>(type: "int", nullable: false),
+                    AverageAttempts = table.Column<double>(type: "float", nullable: false),
+                    TotalSecondsPlayed = table.Column<int>(type: "int", nullable: false),
+                    AverageSecondsPerGame = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Players", x => x.PlayerId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Words",
+                columns: table => new
+                {
+                    WordId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsCommon = table.Column<bool>(type: "bit", nullable: false),
+                    IsUsed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Words", x => x.WordId);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,6 +194,61 @@ namespace Wordle.Api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DateWords",
+                columns: table => new
+                {
+                    DateWordId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    WordId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DateWords", x => x.DateWordId);
+                    table.ForeignKey(
+                        name: "FK_DateWords_Words_WordId",
+                        column: x => x.WordId,
+                        principalTable: "Words",
+                        principalColumn: "WordId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Plays",
+                columns: table => new
+                {
+                    PlaysId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PlayerId = table.Column<int>(type: "int", nullable: false),
+                    WordId = table.Column<int>(type: "int", nullable: false),
+                    DateWordId = table.Column<int>(type: "int", nullable: true),
+                    Attempts = table.Column<int>(type: "int", nullable: false),
+                    TimeInSeconds = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    WasGameWon = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Plays", x => x.PlaysId);
+                    table.ForeignKey(
+                        name: "FK_Plays_DateWords_DateWordId",
+                        column: x => x.DateWordId,
+                        principalTable: "DateWords",
+                        principalColumn: "DateWordId");
+                    table.ForeignKey(
+                        name: "FK_Plays_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "PlayerId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Plays_Words_WordId",
+                        column: x => x.WordId,
+                        principalTable: "Words",
+                        principalColumn: "WordId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -199,6 +287,26 @@ namespace Wordle.Api.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DateWords_WordId",
+                table: "DateWords",
+                column: "WordId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plays_DateWordId",
+                table: "Plays",
+                column: "DateWordId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plays_PlayerId",
+                table: "Plays",
+                column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plays_WordId",
+                table: "Plays",
+                column: "WordId");
         }
 
         /// <inheritdoc />
@@ -220,10 +328,22 @@ namespace Wordle.Api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Plays");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "DateWords");
+
+            migrationBuilder.DropTable(
+                name: "Players");
+
+            migrationBuilder.DropTable(
+                name: "Words");
         }
     }
 }

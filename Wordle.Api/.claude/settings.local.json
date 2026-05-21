@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5006/swagger/v1/swagger.json)",
+      "Bash(curl -s http://localhost:5006/api/Word)",
+      "Bash(curl -sv http://localhost:5006/Word)"
+    ]
+  }
+}
