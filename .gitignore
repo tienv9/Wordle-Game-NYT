@@ -1,0 +1,27 @@
+# Node
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+
+# Vite
+wordle-web/.vite/
+
+# IDE / OS
+.vscode/
+.idea/
+*.suo
+*.user
+.DS_Store
+Thumbs.db
+
+# .NET
+Wordle.Api/Wordle.Api/bin/
+Wordle.Api/Wordle.Api/obj/
+*.user
+*.suo
+.vs/
+
+# Claude Code
+.claude/settings.local.json
