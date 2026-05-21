@@ -1,45 +1,81 @@
-* This is a Copy of my group project together with my partner kinpark (https://github.com/kinpark) and is pulled from this repository (https://github.com/kinpark/EWU-CSCD379-2023-Spring/tree/Assign-5)
+# Wordle Clone
 
-* This is a simple Wordle game with extra implementation like Menu, Create an account, Sign in, log in, Leaderboard, and a simple instruction page on how to play.
-* The game is similar to NY times wordle game with some extra features like search for words and showing what words are left that can fit in 
+A full-stack Wordle clone built with **Vue 3 + TypeScript** and **ASP.NET 8**. Includes user authentication, a daily word-of-the-day mode, a global leaderboard, an admin word editor, and accessibility-focused colorblind themes.
 
-* To access the game, open folder wordle-web with something like Visual Studio Code with the correct extension and run with 'npm run dev' 
-* Then open and run Wordle.Api solution to have access to the backend of the game to allow access to functions like login and Leaderboard. 
+**Live demo:** [wordleclone.lol](https://wordleclone.lol) &nbsp;|&nbsp; **API:** [api.wordleclone.lol](https://api.wordleclone.lol/swagger)
 
-## Tech Stack References
+---
 
-### Front End
-* [VueJs 3](https://vuejs.org/)
-* [VuetifyJs 3](https://vuetifyjs.com/en/)
-* [TypeScript](https://www.typescriptlang.org/docs/) ([Style Guide](https://google.github.io/styleguide/tsguide.html))
-* [Vitest](https://vitest.dev/)
-* [npm](https://docs.npmjs.com/)
+## Features
 
-### Back End
-* [.NET](https://dotnet.microsoft.com/en-us/)
-* [C#](https://learn.microsoft.com/en-us/dotnet/csharp/) ([Essential C# Web Site](https://essentialcsharp.com/home))
-* [ASP.NET 7.0](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-7.0)
-* [Entity Framework 7](https://learn.microsoft.com/en-us/ef)
-* [ASP.NET Core Identity](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-7.0&tabs=visual-studio)
+- **Core game** — Full Wordle algorithm with exact-match and misplaced-letter detection across up to 6 guesses
+- **Word of the Day** — Daily shared word synced via the backend; compete against other players on the same word
+- **Leaderboard** — Ranked player stats with game history persisted in Azure SQL
+- **Authentication** — Account creation and JWT-based sign-in via ASP.NET Core Identity
+- **Hint system** — Client-side valid-word filtering narrows the ~13k word list to ≤150 candidates based on current guess state
+- **Admin word editor** — Role-gated UI to add or remove words from the word bank
+- **Colorblind themes** — Six Vuetify themes including Protanopia/Deuteranopia and Tritanopia variants in both light and dark mode
 
-### DevOps
-* [Azure](https://docs.microsoft.com/en-us/azure/?product=popular)
-* [Azure AppService](https://docs.microsoft.com/en-us/azure/app-service/)
-* [Azure SQL](https://docs.microsoft.com/en-us/azure/azure-sql/)
-* [GitHub Actions](https://docs.github.com/en/actions)
-* [GitHub Actions YAML](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions)
-* [SignalR](https://docs.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-7.0) (Potentially)
-* [Azure Deployment Action](https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions#build-and-deploy)
+---
 
-### VS Code Extensions ###
-- [Vitest](https://marketplace.visualstudio.com/items?itemName=ZixuanChen.vitest-explorer) Unit testing extension
-- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) code formatting extension
-- [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) Vue tooling
-- [TypeScript vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) Vue TypeScript Tooling
-- [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
+## Tech Stack
 
-### Troubleshooting issues in VS Code
-- Make sure you run `npm i` or `npm ci`
-- Make sure all the extensions are installed
-- Restart VS Code
-- Pull the repo again
+| Layer | Technologies |
+|---|---|
+| Frontend | Vue 3, TypeScript, Vuetify 3, Vite, Axios |
+| Testing | Vitest, Vue Test Utils |
+| Backend | ASP.NET 8, C#, Entity Framework Core 8 |
+| Auth | ASP.NET Core Identity, JWT Bearer |
+| Database | Azure SQL (EF Core migrations) |
+| DevOps | Azure App Service, Azure Static Web Apps, GitHub Actions |
+
+---
+
+## Architecture Highlights
+
+- **Reactive game state** — `WordleGame` class managed with Vue's `reactive()` for deep mutation tracking across the board, keyboard, and hint components
+- **Two-pass Wordle algorithm** — `Word.check()` runs an exact-match pass then a misplaced-letter pass, correctly handling duplicate letters
+- **Client-side hint filtering** — `WordsService` ships a full word list in the bundle; all hint computation runs in the browser with no extra API calls
+- **JWT singleton** — `SignInService` decodes the JWT payload client-side, stores it in `localStorage`, and automatically attaches the `Authorization` header to every Axios request
+- **Role-based access** — Backend policies (`EditWord`, `RandomAdmin`) guard admin endpoints; frontend router guards block the word editor for unauthenticated users
+- **Vite dev proxy** — Local development proxies API calls through Vite to avoid CORS, with no code changes needed between dev and production
+
+---
+
+## Getting Started
+
+### Frontend
+
+```bash
+cd wordle-web
+npm install
+npm run dev          # http://localhost:5173
+```
+
+### Backend
+
+```bash
+cd Wordle.Api
+dotnet run --project Wordle.Api   # http://localhost:5006
+```
+
+Requires a SQL Server connection string in `appsettings.json` under `ConnectionStrings:DefaultConnection`. The app auto-migrates and seeds test users on startup.
+
+### Test Users (seeded automatically)
+
+| Email | Password | Role |
+|---|---|---|
+| Admin@intellitect.com | P@ssw0rd123 | Admin |
+| meg@intellitect.com | P@ssw0rd123 | Special |
+
+---
+
+## Running Tests
+
+```bash
+# Frontend unit tests
+cd wordle-web && npm run test:unit
+
+# Backend tests
+cd Wordle.Api && dotnet test
+```
