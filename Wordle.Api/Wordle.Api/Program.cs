@@ -110,6 +110,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    if (app.Configuration.GetValue<bool>("ResetDatabase"))
+    {
+        db.Database.EnsureDeleted();
+    }
     db.Database.Migrate();
     Word.SeedWords(db);
     Player.SeedPlayers(db);
@@ -135,7 +139,10 @@ var options = new RewriteOptions()
         .AddRedirect("^$", redirectRootUrl, 302);
 app.UseRewriter(options);
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseCors(MyAllowAllOrigins);
 
