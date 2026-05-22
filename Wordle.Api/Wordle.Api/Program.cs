@@ -139,7 +139,7 @@ var options = new RewriteOptions()
         .AddRedirect("^$", redirectRootUrl, 302);
 app.UseRewriter(options);
 
-if (!app.Environment.IsProduction())
+if (app.Environment.IsProduction())
 {
     app.UseHttpsRedirection();
 }
@@ -149,7 +149,9 @@ app.UseCors(MyAllowAllOrigins);
 // Add Google site verification.
 app.MapGet("/google5b827f426094db3f.html", () => "google-site-verification: google5b827f426094db3f.html");
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 
