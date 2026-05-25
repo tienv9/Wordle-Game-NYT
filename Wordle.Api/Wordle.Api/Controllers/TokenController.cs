@@ -78,7 +78,7 @@ public class TokenController : Controller
                 issuer: _jwtConfiguration.Issuer,
                 audience: _jwtConfiguration.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(_jwtConfiguration.ExpirationInMinutes),
+                expires: DateTime.UtcNow.AddMinutes(_jwtConfiguration.ExpirationInMinutes),
                 signingCredentials: credentials
             );
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);

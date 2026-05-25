@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Wordle.Api.Data;
 using Wordle.Api.Dtos;
 using Wordle.Api.Identity;
-using static Azure.Core.HttpHeader;
 
 namespace Wordle.Api.Services
 {
@@ -113,14 +111,11 @@ namespace Wordle.Api.Services
                     {
                         _db.SaveChanges();
                     }
-                    catch (SqlException e) // this is probably not the right error to catch
+                    catch (Exception e) when (e.Message.Contains("duplicate") || e.Message.Contains("23505"))
                     {
-                        if (e.Message.Contains("duplicate"))
-                        {
-                            return _db.DateWords
-                                .Include(f => f.Word)
-                                .First(f => f.Date == date.Value);
-                        }
+                        return _db.DateWords
+                            .Include(f => f.Word)
+                            .First(f => f.Date == date.Value);
                     }
                     return dateWord;
                 }

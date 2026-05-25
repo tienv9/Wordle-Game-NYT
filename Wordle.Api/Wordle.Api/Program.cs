@@ -64,7 +64,7 @@ builder.Services.AddSwaggerGen(
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(connectionString);
+    options.UseNpgsql(connectionString);
 });
 builder.Services.AddScoped<WordService>();
 builder.Services.AddScoped<PlayerService>();
