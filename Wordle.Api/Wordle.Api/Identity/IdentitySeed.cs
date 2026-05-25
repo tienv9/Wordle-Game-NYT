@@ -62,7 +62,7 @@ public static class IdentitySeed
                 UserName = "meg@intellitect.com",
                 Email = "meg@intellitect.com",
                 Name = "Meg",
-                BirthDate = (new DateTime(1990, 1, 1))
+                BirthDate = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             };
 
             IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd123").Result;
@@ -83,7 +83,7 @@ public static class IdentitySeed
                 UserName = "matt@intellitect.com",
                 Email = "matt@intellitect.com",
                 Name = "Matt",
-                BirthDate= (new DateTime(1980, 1, 1))
+                BirthDate = new DateTime(1980, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             };
 
             IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd123").Result;
@@ -104,7 +104,7 @@ public static class IdentitySeed
                 UserName = "FrostyTheSnowman@intellitect.com",
                 Email = "FrostyTheSnowman@intellitect.com",
                 Name = "FrostyTheSnowman",
-                BirthDate = (new DateTime(2022, 1, 1))
+                BirthDate = new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             };
 
             IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd123").Result;
@@ -124,7 +124,7 @@ public static class IdentitySeed
     {
         foreach (var user in db.Users.Where(f => !f.BirthDate.HasValue))
         {
-            user.BirthDate = (new DateTime(1980, 1, 1)).AddDays((new Random()).Next(5000) - 1000);
+            user.BirthDate = new DateTime(1980, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays((new Random()).Next(5000) - 1000);
         }
         await db.SaveChangesAsync();
     }
